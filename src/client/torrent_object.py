@@ -3,11 +3,14 @@ from dataclasses import dataclass
 from typing import Optional, List, Union
 
 
-@dataclass(frozen=True)
+@dataclass
 class TorrentObject:
     info: OrderedDict  # metadate dict
-    announce: Optional[bytearray]  # tracker
-    comment: Optional[bytearray] = None  # comment added by uploader, optional
+    info_hash: Union[bytes, None]  # sha-1 hash of the entire bencoded info dict
+    piece_hashes: Union[List[bytes], None]  # list of sha-1 hashes of all the pieces
+
+    announce: Optional[bytes]  # tracker
+    comment: Optional[Union[bytes, None]] = None  # comment added by uploader, optional
 
     # other extensions to the protocol
     nodes: Optional[list] = None  # support distributed hash tables
