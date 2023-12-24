@@ -4,7 +4,11 @@ from typing import Optional, List, Union
 
 
 @dataclass
-class TorrentObject:
+class TorrentObject(object):
+    """
+    object to store attributes from the torrent file
+    """
+
     info: OrderedDict  # metadate dict
     info_hash: Union[bytes, None]  # sha-1 hash of the entire bencoded info dict
     piece_hashes: Union[List[bytes], None]  # list of sha-1 hashes of all the pieces

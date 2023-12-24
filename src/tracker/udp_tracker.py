@@ -7,7 +7,7 @@ import struct
 
 def conn_req() -> Tuple[bytes, str]:
     connection_id = np.int64(0x41727101980)  # connection_id for connect
-    action = np.int32(0)  # action = connect
+    action = np.int32(0)  # action = connect (0)
     transaction_id = np.int32(struct.unpack('<i', struct.pack('<I', random.getrandbits(32)))[0])
 
     data = connection_id.tobytes() + action.tobytes() + transaction_id.tobytes()
@@ -23,6 +23,7 @@ def udp_request(tracker_url: bytes):
     server_address = tracker_url.split(':')[0], int(tracker_url.split(':')[1])
 
     udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    udp_socket.settimeout(1)
 
     request, transaction_id = conn_req()
 
