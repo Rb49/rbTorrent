@@ -1,5 +1,5 @@
 import bencodepy
-from src.read_file.torrent_object import TorrentObject
+from .torrent_object import TorrentObject
 from hashlib import sha1
 
 
@@ -29,9 +29,7 @@ def read_torrent(path: str) -> TorrentObject:
     torrent_data.piece_hashes = [pieces[i: i + 20] for i in range(0, len(pieces), 20)]
 
     data = bencodepy.encode(torrent_data.info)
-    sha1_hash = sha1()
-    sha1_hash.update(data)
-    sha1_hash = sha1_hash.digest()
+    sha1_hash = sha1(data).digest()
     torrent_data.info_hash = sha1_hash
 
     return torrent_data

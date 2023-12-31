@@ -1,14 +1,14 @@
 import socket
-import numpy as np
+from numpy import int32, int64
 import random
 from typing import Tuple
 import struct
 
 
-def conn_req() -> Tuple[bytes, str]:
-    connection_id = np.int64(0x41727101980)  # connection_id for connect
-    action = np.int32(0)  # action = connect (0)
-    transaction_id = np.int32(struct.unpack('<i', struct.pack('<I', random.getrandbits(32)))[0])
+def conn_req() -> Tuple[bytes, int]:
+    connection_id = int64(0x41727101980)  # connection_id for connect
+    action = int32(0)  # action = connect (0)
+    transaction_id = int32(struct.unpack('<i', struct.pack('<I', random.getrandbits(32)))[0])
 
     data = connection_id.tobytes() + action.tobytes() + transaction_id.tobytes()
 
@@ -26,6 +26,7 @@ def udp_request(tracker_url: bytes):
     udp_socket.settimeout(1)
 
     request, transaction_id = conn_req()
+    print(request, len(request))
 
     udp_socket.sendto(request, server_address)
 
@@ -33,7 +34,3 @@ def udp_request(tracker_url: bytes):
         data, server = udp_socket.recvfrom(1024)
         print(data)
 
-
-if __name__ == '__main__':
-    upd_url = b'udp://tracker.tiny-vps.com:6969/announce'
-    udp_request(upd_url)

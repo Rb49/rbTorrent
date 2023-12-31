@@ -4,9 +4,10 @@ from collections import OrderedDict
 from typing import Union
 
 
-def connect_to_tracker(tracker_url: str, info_hash: bytes, peer_id: str) -> Union[OrderedDict, str]:
+def connect_to_tracker(tracker_url: str, info_hash: bytes, peer_id: str, port: int) -> Union[OrderedDict, str]:
     """
     connect to a http tracker through GET
+    :param port: tells the tracker where the client is listening
     :param tracker_url: url of the tracker
     :param info_hash: info_hash of the torrent file
     :param peer_id: peer_id
@@ -19,6 +20,7 @@ def connect_to_tracker(tracker_url: str, info_hash: bytes, peer_id: str) -> Unio
         'uploaded': 0,
         'downloaded': 0,
         'left': 0,
+        'port': port,
         'event': 'started',
     }
 
@@ -28,6 +30,7 @@ def connect_to_tracker(tracker_url: str, info_hash: bytes, peer_id: str) -> Unio
     if response.status_code == 200:
         peer_data = response.text
         peer_data = bencodepy.decode(str.encode(peer_data))
+        print(peer_data)
         return peer_data
     else:
         return f"Failed to connect to the tracker. HTTP Status Code: {response.status_code}"
